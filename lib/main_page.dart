@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -9,6 +8,14 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   bool _isChecked = false;
+  TextEditingController _todoName = TextEditingController();
+  @override
+  void dispose() {
+    // 낭비 방지를 위해 꺼줌. 컨트롤러를 꺼주자
+    _todoName.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,7 +23,7 @@ class _MainPageState extends State<MainPage> {
         appBar: AppBar(
           title: Text("We'll do"),
         ),
-        body: Column(
+        body: ListView(
           children: <Widget>[
             CheckboxListTile(
               title: const Text('Flutter Study'),
@@ -42,20 +49,37 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
-}
 
-addSchedule(BuildContext context) {
-  return showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-              title: Text('To do List'),
-              content: Text('Do you want to add To do List?'),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('No'),
-                ),
-                FlatButton(
-                  child: Text('Yes'),
-                ),
-              ]));
+  addSchedule(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+                title: Text('To do List'),
+                content: Text('Do you want to add To do List?'),
+                actions: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                              hintText: "What will you do today?"),
+                          controller: _todoName,
+                        ),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          FlatButton(
+                            child: Text('No'),
+                            onPressed: () => Navigator.of(context).pop(),
+                          ),
+                          FlatButton(
+                            child: Text('Yes'),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ]));
+  }
 }
