@@ -7,7 +7,8 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  bool _isChecked = false;
+  List<bool> listChecked = [false, false];
+  List<String> todoList = ['flutter study', "we'll do"];
   TextEditingController _todoName = TextEditingController();
   @override
   void dispose() {
@@ -23,34 +24,33 @@ class _MainPageState extends State<MainPage> {
         appBar: AppBar(
           title: Text("We'll do"),
         ),
-        body: ListView(
-          children: <Widget>[
-            CheckboxListTile(
-              title: const Text('Flutter Study'),
-              value: _isChecked,
-              onChanged: (_) {
-                setState(() {
-                  _isChecked = !_isChecked;
-                });
-              },
-              secondary: Icon(Icons.hourglass_empty),
-            ),
-            CircleAvatar(
-              backgroundColor: Colors.red,
-              child: IconButton(
-                  icon: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => addSchedule(context)),
-            ),
-          ],
+        body: ListView.builder(
+          itemCount: (todoList.isEmpty) ? 0 : todoList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return makeCheckbox(todoList[index], index);
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => questionAddSchedule(context),
+          child: Icon(Icons.add),
         ),
       ),
     );
   }
 
-  addSchedule(BuildContext context) {
+  makeCheckbox(String todo, int index) {
+    return CheckboxListTile(
+      title: Text(todo),
+      value: listChecked[index],
+      onChanged: (_) {
+        setState(() {
+          listChecked[index] = !listChecked[index];
+        });
+      },
+    );
+  }
+
+  questionAddSchedule(BuildContext context) {
     return showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -75,6 +75,12 @@ class _MainPageState extends State<MainPage> {
                           ),
                           FlatButton(
                             child: Text('Yes'),
+                            onPressed: () {
+                              todoList.add(_todoName.text);
+                              listChecked.add(false);
+                              _todoName.clear();
+                              Navigator.of(context).pop();
+                            },
                           ),
                         ],
                       )
