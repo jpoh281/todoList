@@ -90,6 +90,7 @@ class _ToDoMainState extends State<ToDoMain> with TickerProviderStateMixin {
         item.title,
         key: Key('${item.hashCode}'),
         style: TextStyle(
+          fontWeight: item.completed ? null : FontWeight.bold,
           color: item.completed ? Colors.black87 : Colors.orangeAccent,
           decoration: item.completed ? TextDecoration.lineThrough : null,
         ),

@@ -51,8 +51,11 @@ class _TodoCreateNUpdateState extends State<TodoCreateNUpdate> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Spacer(),
                 buildRaisedButton(context, 'Save'),
+                Spacer(),
                 buildRaisedButton(context, 'Cancel'),
+                Spacer(),
               ],
             )
           ],
@@ -70,10 +73,8 @@ class _TodoCreateNUpdateState extends State<TodoCreateNUpdate> {
       ),
       elevation: 3.0,
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-        bottomLeft: Radius.circular(10.0),
-        topRight: Radius.circular(10.0),
-      )),
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
       onPressed: title == 'Save' ? () => submit() : () => cancel(),
     );
   }
