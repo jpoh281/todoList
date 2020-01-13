@@ -27,7 +27,10 @@ class _CheckListPageState extends State<CheckListPage> {
         body: ListView.builder(
           itemCount: (todoList.isEmpty) ? 0 : todoList.length,
           itemBuilder: (BuildContext context, int index) {
-            return makeCheckbox(todoList[index], index);
+            return (makeCheckbox(
+              todoList[index],
+              index,
+            ));
           },
         ),
         floatingActionButton: FloatingActionButton(
@@ -52,8 +55,10 @@ class _CheckListPageState extends State<CheckListPage> {
 
   questionAddSchedule(BuildContext context) {
     return showDialog(
+        barrierDismissible: true,
+        useRootNavigator: true,
         context: context,
-        builder: (_) => AlertDialog(
+        builder: (BuildContext context) => AlertDialog(
                 title: Text('To do List'),
                 content: Text('Do you want to add To do List?'),
                 actions: <Widget>[
@@ -71,15 +76,19 @@ class _CheckListPageState extends State<CheckListPage> {
                         children: <Widget>[
                           FlatButton(
                             child: Text('No'),
-                            onPressed: () => Navigator.of(context).pop(),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
                           ),
                           FlatButton(
                             child: Text('Yes'),
                             onPressed: () {
-                              todoList.add(_todoName.text);
-                              listChecked.add(false);
-                              _todoName.clear();
                               Navigator.of(context).pop();
+                              setState(() {
+                                todoList.add(_todoName.text);
+                                listChecked.add(false);
+                                _todoName.clear();
+                              });
                             },
                           ),
                         ],
