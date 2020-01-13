@@ -21,12 +21,11 @@ class _CheckListPageState extends State<CheckListPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: Text("We'll do"),
-        ),
-        body: ListView.builder(
-          itemCount: (todoList.isEmpty) ? 0 : todoList.length,
-          itemBuilder: (BuildContext context, int index) {
+        appBar: AppBar(title: Text("We'll do")),
+        body: AnimatedList(
+          initialItemCount: (todoList.isEmpty) ? 0 : todoList.length,
+          itemBuilder:
+              (BuildContext context, int index, Animation<double> animation) {
             return (makeCheckbox(
               todoList[index],
               index,
@@ -43,8 +42,12 @@ class _CheckListPageState extends State<CheckListPage> {
 
   makeCheckbox(String todo, int index) {
     return CheckboxListTile(
-      title: Text(todo),
+      controlAffinity: ListTileControlAffinity.leading,
       value: listChecked[index],
+      title: Text(todo,
+          style: (listChecked[index])
+              ? TextStyle(decoration: TextDecoration.lineThrough)
+              : null),
       onChanged: (_) {
         setState(() {
           listChecked[index] = !listChecked[index];
