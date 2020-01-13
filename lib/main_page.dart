@@ -22,7 +22,7 @@ class _MainPageState extends State<MainPage> {
       theme: ThemeData(primarySwatch: Colors.orange),
       home: Scaffold(
         appBar: AppBar(
-          title: Text("We'll do"),
+          title: Text("We'll do", key: Key('main-app-title')),
           centerTitle: true,
         ),
         body: IndexedStack(
@@ -55,7 +55,4 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
-
-
-
 }
