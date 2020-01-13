@@ -19,7 +19,12 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(primarySwatch: Colors.orange),
       home: Scaffold(
+        appBar: AppBar(
+          title: Text("We'll do"),
+          centerTitle: true,
+        ),
         body: IndexedStack(
           index: _selectedPageIndex,
           children: selectedPageList,
@@ -33,7 +38,7 @@ class _MainPageState extends State<MainPage> {
                 _selectedPageIndex = index;
               });
             },
-            selectedItemColor: Colors.blue,
+            selectedItemColor: Colors.orange,
             unselectedItemColor: Colors.grey,
             items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
@@ -50,4 +55,7 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
+
+
+
 }
