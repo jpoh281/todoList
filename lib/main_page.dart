@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todolist_jpoh/screeans/checklist_page.dart';
+import 'package:todolist_jpoh/screeans/todo_main.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -9,7 +9,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int _selectedPageIndex = 0;
   static List<Widget> selectedPageList = <Widget>[
-    CheckListPage(),
+    ToDoMain(),
     Container(),
     Container(),
     Container(),
