@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todolist_jpoh/screeans/alarm_main.dart';
 import 'package:todolist_jpoh/screeans/todo_main.dart';
 
 class MainPage extends StatefulWidget {
@@ -10,7 +11,7 @@ class _MainPageState extends State<MainPage> {
   int _selectedPageIndex = 0;
   static List<Widget> selectedPageList = <Widget>[
     ToDoMain(),
-    Container(),
+    AlarmMainPage(),
     Container(),
     Container(),
     Container(),
@@ -44,11 +45,11 @@ class _MainPageState extends State<MainPage> {
               BottomNavigationBarItem(
                   icon: Icon(Icons.edit), title: Text('To-do')),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.search), title: Text('Search')),
+                  icon: Icon(Icons.alarm), title: Text('Alarm')),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.group), title: Text('Group')),
+                  icon: Icon(Icons.sentiment_satisfied), title: Text('Diary')),
               BottomNavigationBarItem(
-                  icon: Icon(Icons.message), title: Text('Talk')),
+                  icon: Icon(Icons.assessment), title: Text('Report')),
               BottomNavigationBarItem(
                   icon: Icon(Icons.settings), title: Text('Setting'))
             ]),

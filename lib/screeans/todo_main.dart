@@ -35,6 +35,7 @@ class _ToDoMainState extends State<ToDoMain> with TickerProviderStateMixin {
     return Scaffold(
       body: renderBody(),
       floatingActionButton: FloatingActionButton(
+        heroTag: "todo",
         onPressed: () => goToNewItemView(),
         child: Icon(Icons.add),
       ),
