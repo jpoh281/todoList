@@ -11,6 +11,7 @@ class TodoCreateNUpdate extends StatefulWidget {
 }
 
 class _TodoCreateNUpdateState extends State<TodoCreateNUpdate> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController titleController;
 
   @override
@@ -37,28 +38,37 @@ class _TodoCreateNUpdateState extends State<TodoCreateNUpdate> {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextFormField(
-              controller: titleController,
-              autofocus: true,
-              onEditingComplete: null,
-              decoration: InputDecoration(labelText: 'Title'),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Spacer(),
-                buildRaisedButton(context, 'Save'),
-                Spacer(),
-                buildRaisedButton(context, 'Cancel'),
-                Spacer(),
-              ],
-            )
-          ],
+      body: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextFormField(
+                controller: titleController,
+                autofocus: true,
+                onEditingComplete: null,
+                decoration: InputDecoration(labelText: '할 일'),
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return '할 일을 적어주세요.';
+                  }
+                  return null;
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Spacer(),
+                  buildRaisedButton(context, '저장'),
+                  Spacer(),
+                  buildRaisedButton(context, '취소'),
+                  Spacer(),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -75,7 +85,12 @@ class _TodoCreateNUpdateState extends State<TodoCreateNUpdate> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
-      onPressed: title == 'Save' ? () => submit() : () => cancel(),
+      onPressed: () {
+        if (title == '저장') {
+          if (_formKey.currentState.validate()) submit();
+        } else
+          cancel();
+      },
     );
   }
 
