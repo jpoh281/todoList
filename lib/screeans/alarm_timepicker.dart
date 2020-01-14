@@ -15,13 +15,16 @@ class _AlarmTimePickerPageState extends State<AlarmTimePickerPage> {
   ValueChanged<TimeOfDay> selectTime;
   TimeOfDay _time;
   bool _repetition;
-  List<bool> _repetitionDay = [false, false, false, false, false, false, false];
+  List<bool> _repetitionDay;
   @override
   void initState() {
     alarmTitleController = new TextEditingController(
         text: widget.alarm != null ? widget.alarm.title : null);
-    _time = TimeOfDay.now();
+    _time = (widget.alarm == null) ? TimeOfDay.now() : widget.alarm.time;
     _repetition = (widget.alarm == null) ? false : widget.alarm.repetition;
+    _repetitionDay = (widget.alarm == null)
+        ? [false, false, false, false, false, false, false]
+        : widget.alarm.repetitionDay;
     super.initState();
   }
 
@@ -58,6 +61,13 @@ class _AlarmTimePickerPageState extends State<AlarmTimePickerPage> {
                       fontWeight: FontWeight.bold),
                 ),
                 onTap: () => _selectTime(context),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Container(
+                height: 1,
+                color: Colors.black,
               ),
             ),
             Padding(

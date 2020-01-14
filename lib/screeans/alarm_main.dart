@@ -60,9 +60,12 @@ class _AlarmMainPageState extends State<AlarmMainPage>
         key: animatedListKey,
         initialItemCount: items.length,
         itemBuilder: (BuildContext context, int index, animation) {
-          return SizeTransition(
-            sizeFactor: animation,
-            child: buildItem(items[index], index),
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizeTransition(
+              sizeFactor: animation,
+              child: buildItem(items[index], index),
+            ),
           );
         });
   }
@@ -81,16 +84,25 @@ class _AlarmMainPageState extends State<AlarmMainPage>
 
   Widget buildListTile(Alarm item, index) {
     return ListTile(
-//      onTap: () => changeItemCompleteness(item),
+      //  onTap: () => changeItemCompleteness(item),
       onLongPress: () => goToEditItemView(item, index),
       title: Text(
-        item.title,
+        item.time.format(context),
         key: Key('${item.hashCode}'),
         style: TextStyle(
-          fontWeight: item.onWork ? null : FontWeight.bold,
+          fontWeight: item.onWork ? FontWeight.bold : FontWeight.bold,
           color: item.onWork ? Colors.black87 : Colors.grey,
+          fontSize: 45,
         ),
       ),
+      subtitle: Text(
+        repeatDay(item),
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 20,
+        ),
+      ),
+      isThreeLine: true,
       trailing: Switch.adaptive(
           value: item.onWork, onChanged: (_) => changeItemOnWork(item)),
     );
@@ -158,5 +170,14 @@ class _AlarmMainPageState extends State<AlarmMainPage>
       setState(() {});
       emptyListController.forward();
     }
+  }
+
+  String repeatDay(Alarm item) {
+    List<String> dayName = ["월", "화", "수", "목", "금", "토", "일"];
+    String day = "";
+    for (int i = 0; i < item.repetitionDay.length; i++) {
+      if (item.repetitionDay[i]) day += dayName[i] + "   ";
+    }
+    return day;
   }
 }
