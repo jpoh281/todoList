@@ -30,23 +30,18 @@ class _AlarmMainPageState extends State<AlarmMainPage>
       body: renderBody(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          return Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) {
-            return AlarmTimePickerPage();
-          }));
-        },
+        onPressed: () => goToNewItemView(),
         child: Icon(Icons.add_alarm),
       ),
     );
   }
 
   Widget renderBody() {
-//    if (items.length > 0) {
-//      return buildListView();
-//    } else {
-    return emptyList();
-    // }
+    if (items.length > 0) {
+      return buildListView();
+    } else {
+      return emptyList();
+    }
   }
 
   Widget emptyList() {
@@ -60,15 +55,108 @@ class _AlarmMainPageState extends State<AlarmMainPage>
     );
   }
 
-//  Widget buildListView() {
-//    return AnimatedList(
-//        key: animatedListKey,
-//        initialItemCount: items.length,
-//        itemBuilder: (BuildContext context, int index, animation) {
-//          return SizeTransition(
-//            sizeFactor: animation,
-//            child: buildItem(items[index], index),
-//          );
-//        });
-//  }
+  Widget buildListView() {
+    return AnimatedList(
+        key: animatedListKey,
+        initialItemCount: items.length,
+        itemBuilder: (BuildContext context, int index, animation) {
+          return SizeTransition(
+            sizeFactor: animation,
+            child: buildItem(items[index], index),
+          );
+        });
+  }
+
+  Widget buildItem(Alarm item, int index) {
+    return Dismissible(
+      key: Key('${item.hashCode}'),
+      onDismissed: (direction) => removeItemFromList(item, index),
+      background: Container(
+        color: Colors.grey,
+      ),
+      direction: DismissDirection.startToEnd,
+      child: buildListTile(item, index),
+    );
+  }
+
+  Widget buildListTile(Alarm item, index) {
+    return ListTile(
+//      onTap: () => changeItemCompleteness(item),
+      onLongPress: () => goToEditItemView(item, index),
+      title: Text(
+        item.title,
+        key: Key('${item.hashCode}'),
+        style: TextStyle(
+          fontWeight: item.onWork ? null : FontWeight.bold,
+          color: item.onWork ? Colors.black87 : Colors.grey,
+        ),
+      ),
+      trailing: Switch.adaptive(
+          value: item.onWork, onChanged: (_) => changeItemOnWork(item)),
+    );
+  }
+
+  void changeItemOnWork(Alarm item) {
+    setState(() {
+      item.onWork = !item.onWork;
+    });
+  }
+
+  void goToNewItemView() {
+//    여기서 우리는 새로운 관점을 네비게이터 스택에 밀어넣고 있다.
+//    MaterialPageRoute를 사용하면 왼쪽 상단 모서리에 있는 각 플랫폼에 대해
+//    자동으로 백 버튼이 표시되는 Material 앱의 표준 동작을 얻을 수 있다.
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return AlarmTimePickerPage();
+    })).then((alarm) {
+      if (alarm != null) {
+        addItem(alarm);
+      }
+    });
+  }
+
+  void addItem(Alarm item) {
+    items.insert(items.length, item);
+    if (animatedListKey.currentState != null)
+      animatedListKey.currentState.insertItem(0);
+  }
+
+  void goToEditItemView(Alarm item, int index) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return AlarmTimePickerPage(
+        alarm: item,
+      );
+    })).then((alarm) {
+      if (alarm != null) {
+        editItem(alarm, index);
+      }
+    });
+  }
+
+  void editItem(Alarm item, int index) {
+    items[index] = item;
+  }
+
+  void removeItemFromList(Alarm item, int index) {
+    animatedListKey.currentState.removeItem(index, (context, animation) {
+      return SizedBox(
+        width: 0,
+        height: 0,
+      );
+    });
+    deleteItem(item);
+  }
+
+  void deleteItem(Alarm item) {
+    // 다트 오브젝트는 모두 고유한 해시코드로 인식되기때문에
+    // 우리는 항목 검색이 필요하지않다.
+    // 이것의 의미는 단지 제거 방식에 의해 필요하다?
+
+    items.remove(item);
+    if (items.isEmpty) {
+      emptyListController.reset();
+      setState(() {});
+      emptyListController.forward();
+    }
+  }
 }

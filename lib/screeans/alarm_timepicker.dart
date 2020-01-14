@@ -13,16 +13,15 @@ class AlarmTimePickerPage extends StatefulWidget {
 class _AlarmTimePickerPageState extends State<AlarmTimePickerPage> {
   TextEditingController alarmTitleController = TextEditingController();
   ValueChanged<TimeOfDay> selectTime;
-  String _title;
   TimeOfDay _time;
   bool _repetition;
-  List<bool> _repetitionDay = [false, false, true, false, true, false, false];
+  List<bool> _repetitionDay = [false, false, false, false, false, false, false];
   @override
   void initState() {
     alarmTitleController = new TextEditingController(
         text: widget.alarm != null ? widget.alarm.title : null);
     _time = TimeOfDay.now();
-    _repetition = false;
+    _repetition = (widget.alarm == null) ? false : widget.alarm.repetition;
     super.initState();
   }
 
@@ -72,22 +71,15 @@ class _AlarmTimePickerPageState extends State<AlarmTimePickerPage> {
             ),
             CheckboxListTile(
               title: Text('반복'),
-              value: (widget.alarm == null)
-                  ? _repetition
-                  : widget.alarm.repetition,
+              value: _repetition,
               onChanged: (value) {
                 setState(() {
-                  if (widget.alarm == null)
-                    _repetition = !_repetition;
-                  else
-                    widget.alarm.repetition = !widget.alarm.repetition;
+                  _repetition = !_repetition;
                 });
               },
             ),
             Visibility(
-              visible: (widget.alarm == null)
-                  ? _repetition
-                  : widget.alarm.repetition,
+              visible: _repetition,
               child: buildCircleDay(context),
             ),
             SizedBox(
@@ -208,20 +200,11 @@ class _AlarmTimePickerPageState extends State<AlarmTimePickerPage> {
   }
 
   void submit() {
-    Navigator.of(context).pop((){
-      widget.alarm.title = alarmTitleController.text;
-      widget.alarm.time = _time;
-      if(  widget.alarm.repetition != null){
-        widget.alarm.repetition = widget.alarm.repetition;
-      } else{
-        widget.alarm.repetition = _repetition;
-      }
-      if(widget.alarm.repetition){
-        widget.alarm.repetitionDay = _repetitionDay;
-      }
-      widget.alarm.onWork = true;
-      return widget.alarm;
-    });
+    Navigator.of(context).pop(Alarm(
+        time: _time,
+        title: (alarmTitleController != null) ? alarmTitleController.text : "",
+        repetition: _repetition,
+        repetitionDay: _repetitionDay));
   }
 
   void cancel() {
